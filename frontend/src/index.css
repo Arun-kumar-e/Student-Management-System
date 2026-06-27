@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Outfit", "Inter", sans-serif;
+  --font-sans: "Inter", sans-serif;
+
+  /* Minimalist Color Palette - Black, white, and carbon grays */
+  --color-brand-purple: oklch(0.15 0.01 285);
+  --color-brand-purple-hover: oklch(0.25 0.01 285);
+  --color-brand-pink: oklch(0.2 0.01 285);
+  --color-brand-indigo: oklch(0.18 0.01 285);
+  
+  /* Statuses - Softened */
+  --color-success: oklch(0.62 0.15 145);
+  --color-warning: oklch(0.72 0.12 85);
+  --color-error: oklch(0.58 0.16 25);
+  
+  /* Light mode default tokens */
+  --color-surface-bg: oklch(0.99 0.002 285);
+  --color-surface-card: oklch(1 0 0);
+  --color-surface-border: oklch(0.93 0.003 285);
+  --color-text-title: oklch(0.12 0.004 285);
+  --color-text-body: oklch(0.38 0.004 285);
+  --color-text-muted: oklch(0.58 0.003 285);
+
+  /* Shadow systems */
+  --shadow-premium: 0 8px 30px -10px oklch(0.12 0.004 285 / 0.05);
+  --shadow-glass: 0 4px 20px 0 oklch(0 0 0 / 0.02);
+}
+
+/* Custom variant for dark mode compatibility in Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  /* Dark mode token overrides */
+  --color-brand-purple: oklch(0.95 0 0);
+  --color-brand-purple-hover: oklch(0.85 0 0);
+  --color-brand-pink: oklch(0.9 0 0);
+  --color-brand-indigo: oklch(0.92 0 0);
+
+  --color-surface-bg: oklch(0.08 0 0);
+  --color-surface-card: oklch(0.12 0 0);
+  --color-surface-border: oklch(0.18 0 0);
+  --color-text-title: oklch(0.98 0 0);
+  --color-text-body: oklch(0.78 0 0);
+  --color-text-muted: oklch(0.5 0 0);
+  
+  --shadow-premium: 0 16px 40px -12px oklch(0.02 0 0 / 0.5);
+  --shadow-glass: 0 4px 20px 0 oklch(0 0 0 / 0.2);
+}
+
+/* Custom Base resets */
+@layer base {
+  body {
+    background-color: var(--color-surface-bg);
+    color: var(--color-text-body);
+    font-family: var(--font-sans);
+    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1), border-color 300ms cubic-bezier(0.4, 0, 0.2, 1), color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--color-text-title);
+    font-weight: 700;
+    letter-tracking: -0.02em;
+  }
+}
+
+/* Custom reusable design patterns */
+.glass-panel {
+  background: color-mix(in oklch, var(--color-surface-card) 95%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-surface-border);
+}
+
+.gradient-text {
+  color: var(--color-text-title);
+}
+
+.gradient-bg {
+  background: var(--color-text-title);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
