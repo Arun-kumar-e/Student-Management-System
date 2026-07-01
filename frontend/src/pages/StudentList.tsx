@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
   Search,
-  SlidersHorizontal,
   ChevronLeft,
   ChevronRight,
   Edit2,
@@ -33,11 +32,19 @@ const DEPARTMENTS = [
   'Civil Engineering',
 ];
 
+const rowVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.04, duration: 0.25, ease: 'easeOut' as const },
+  }),
+};
+
 export const StudentList = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // State Management
   const [studentsData, setStudentsData] = useState<PageResponse<StudentResponse> | null>(null);
   const [nonPaginatedStudents, setNonPaginatedStudents] = useState<StudentResponse[] | null>(null);
   
@@ -57,16 +64,13 @@ export const StudentList = () => {
   const [isFormSaving, setIsFormSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Check if we navigated here with intent to open enrollment form (e.g. from Dashboard click)
   useEffect(() => {
     if (location.state && (location.state as any).openCreateForm) {
       setIsFormOpen(true);
-      // Clear state so it doesn't reopen on reload
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, navigate]);
 
-  // Load students based on page settings, search query, or department filter
   const fetchStudents = async () => {
     try {
       setIsLoading(true);
@@ -95,14 +99,12 @@ export const StudentList = () => {
     fetchStudents();
   }, [page, sortBy, direction, debouncedSearchQuery, selectedDept]);
 
-  // Handle pagination triggers
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && studentsData && newPage < studentsData.totalPages) {
       setPage(newPage);
     }
   };
 
-  // Toggle sorting options
   const handleSort = (field: string) => {
     if (sortBy === field) {
       setDirection(direction === 'asc' ? 'desc' : 'asc');
@@ -110,10 +112,9 @@ export const StudentList = () => {
       setSortBy(field);
       setDirection('asc');
     }
-    setPage(0); // Reset page on sort trigger
+    setPage(0);
   };
 
-  // Form submission handler
   const handleFormSubmit = async (requestData: StudentRequest) => {
     try {
       setIsFormSaving(true);
@@ -128,14 +129,12 @@ export const StudentList = () => {
       setEditingStudent(undefined);
       fetchStudents();
     } catch (error: any) {
-      // Allow the form component to handle 400/409 errors
       throw error;
     } finally {
       setIsFormSaving(false);
     }
   };
 
-  // Student deletion handler
   const handleDeleteConfirm = async () => {
     if (!deletingStudent) return;
     try {
@@ -162,7 +161,6 @@ export const StudentList = () => {
     setEditingStudent(undefined);
   };
 
-  // Determine current active list
   const activeStudents = nonPaginatedStudents || (studentsData ? studentsData.content : []);
   const isSearchActive = !!(debouncedSearchQuery.trim() || selectedDept);
 
@@ -170,7 +168,7 @@ export const StudentList = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
       className="space-y-6"
     >
       {/* Title Header */}
@@ -183,13 +181,13 @@ export const StudentList = () => {
         </div>
 
         <motion.button
-          whileHover={{ scale: 1.03 }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => {
             setEditingStudent(undefined);
             setIsFormOpen(true);
           }}
-          className="px-5 py-2.5 rounded-button bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-semibold flex items-center justify-center space-x-2 cursor-pointer text-sm"
+          className="px-5 py-2.5 rounded-md bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-semibold flex items-center justify-center space-x-2 cursor-pointer text-sm transition-colors duration-150"
         >
           <Plus size={18} />
           <span>Add Student</span>
@@ -197,25 +195,25 @@ export const StudentList = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-card border border-surface-border bg-surface-card flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 rounded-lg border border-surface-border bg-surface-card flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1">
-          <Search size={18} className="absolute left-4 top-3.5 text-text-muted" />
+          <Search size={18} className="absolute left-4 top-3 text-text-muted" />
           <input
             type="text"
             placeholder="Search student profiles by name..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
-              setSelectedDept(''); // Reset dept if searching
+              setSelectedDept('');
               setPage(0);
             }}
-            className="w-full pl-12 pr-4 py-2.5 rounded-button border border-surface-border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm"
+            className="w-full pl-12 pr-4 py-2.5 rounded-md border border-surface-border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-4 top-3.5 text-text-muted hover:text-text-title"
+              className="absolute right-4 top-3 text-text-muted hover:text-text-title"
             >
               <X size={16} />
             </button>
@@ -225,15 +223,15 @@ export const StudentList = () => {
         {/* Filters */}
         <div className="flex items-center gap-3">
           <div className="relative flex-1 md:flex-none">
-            <Filter size={14} className="absolute left-3 top-3.5 text-text-muted" />
+            <Filter size={14} className="absolute left-3 top-3 text-text-muted" />
             <select
               value={selectedDept}
               onChange={(e) => {
                 setSelectedDept(e.target.value);
-                setSearchQuery(''); // Reset search if filtering dept
+                setSearchQuery('');
                 setPage(0);
               }}
-              className="w-full pl-9 pr-8 py-2.5 rounded-button border border-surface-border bg-surface-bg text-text-title focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm appearance-none cursor-pointer min-w-[200px]"
+              className="w-full pl-9 pr-8 py-2.5 rounded-md border border-surface-border bg-surface-bg text-text-title focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm appearance-none cursor-pointer min-w-[200px]"
             >
               <option value="">All Departments</option>
               {DEPARTMENTS.map((dept) => (
@@ -246,14 +244,14 @@ export const StudentList = () => {
 
           <motion.button
             whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => {
               setSearchQuery('');
               setSelectedDept('');
               setPage(0);
               fetchStudents();
             }}
-            className="p-2.5 rounded-button border border-surface-border bg-surface-card hover:bg-surface-bg text-text-muted hover:text-text-title transition-colors cursor-pointer"
+            className="p-2.5 rounded-md border border-surface-border bg-surface-card hover:bg-surface-bg text-text-muted hover:text-text-title transition-colors duration-150 cursor-pointer"
             title="Reset Filters"
           >
             <RefreshCw size={18} />
@@ -274,7 +272,7 @@ export const StudentList = () => {
       ) : activeStudents.length > 0 ? (
         <div className="space-y-6">
           {/* Table view (Tablet/Desktop) */}
-          <div className="hidden md:block overflow-hidden rounded-card border border-surface-border bg-surface-card">
+          <div className="hidden md:block overflow-hidden rounded-lg border border-surface-border bg-surface-card">
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-sm">
                 <thead>
@@ -282,7 +280,7 @@ export const StudentList = () => {
                     <th className="px-6 py-4 font-semibold text-text-muted">
                       <button
                         onClick={() => handleSort('id')}
-                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer"
+                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer transition-colors duration-150"
                       >
                         <span>ID</span>
                         <ArrowUpDown size={14} />
@@ -291,7 +289,7 @@ export const StudentList = () => {
                     <th className="px-6 py-4 font-semibold text-text-muted">
                       <button
                         onClick={() => handleSort('name')}
-                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer"
+                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer transition-colors duration-150"
                       >
                         <span>Name</span>
                         <ArrowUpDown size={14} />
@@ -300,7 +298,7 @@ export const StudentList = () => {
                     <th className="px-6 py-4 font-semibold text-text-muted">
                       <button
                         onClick={() => handleSort('rollNumber')}
-                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer"
+                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer transition-colors duration-150"
                       >
                         <span>Roll Number</span>
                         <ArrowUpDown size={14} />
@@ -309,7 +307,7 @@ export const StudentList = () => {
                     <th className="px-6 py-4 font-semibold text-text-muted">
                       <button
                         onClick={() => handleSort('department')}
-                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer"
+                        className="flex items-center space-x-1.5 hover:text-text-title cursor-pointer transition-colors duration-150"
                       >
                         <span>Department</span>
                         <ArrowUpDown size={14} />
@@ -318,7 +316,7 @@ export const StudentList = () => {
                     <th className="px-6 py-4 font-semibold text-text-muted text-center">
                       <button
                         onClick={() => handleSort('cgpa')}
-                        className="mx-auto flex items-center justify-center space-x-1.5 hover:text-text-title cursor-pointer"
+                        className="mx-auto flex items-center justify-center space-x-1.5 hover:text-text-title cursor-pointer transition-colors duration-150"
                       >
                         <span>CGPA</span>
                         <ArrowUpDown size={14} />
@@ -328,11 +326,15 @@ export const StudentList = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-surface-border">
-                  {activeStudents.map((student) => (
+                  {activeStudents.map((student, idx) => (
                     <motion.tr
                       key={student.id}
-                      layoutId={`row-${student.id}`}
-                      className="hover:bg-surface-bg/40 transition-colors"
+                      custom={idx}
+                      variants={rowVariants}
+                      initial="hidden"
+                      animate="visible"
+                      whileHover={{ backgroundColor: 'var(--color-surface-bg)' }}
+                      className="hover:bg-surface-bg/40 transition-colors duration-150"
                     >
                       <td className="px-6 py-4 font-bold text-text-muted">#{student.id}</td>
                       <td className="px-6 py-4 font-bold text-text-title">
@@ -344,11 +346,11 @@ export const StudentList = () => {
                       <td className="px-6 py-4 font-mono font-medium text-text-body">{student.rollNumber}</td>
                       <td className="px-6 py-4 font-medium text-text-body">{student.department}</td>
                       <td className="px-6 py-4 text-center">
-                        <span className={`inline-block px-2.5 py-1 text-xs font-extrabold rounded-full ${
-                          student.cgpa >= 8.5 
-                            ? 'bg-brand-purple/10 text-brand-purple' 
-                            : student.cgpa >= 7.0 
-                              ? 'bg-brand-purple/10 text-brand-purple' 
+                        <span className={`inline-block px-2.5 py-1 text-xs font-extrabold rounded-sm ${
+                          student.cgpa >= 8.5
+                            ? 'bg-success/10 text-success'
+                            : student.cgpa >= 7.0
+                              ? 'bg-success/10 text-success'
                               : 'bg-warning/10 text-warning'
                         }`}>
                           {student.cgpa.toFixed(2)}
@@ -356,27 +358,33 @@ export const StudentList = () => {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end items-center space-x-2">
-                          <button
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => navigate(`/students/${student.id}`)}
-                            className="p-1.5 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-purple transition-colors cursor-pointer"
+                            className="p-1.5 rounded-md border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-purple transition-colors duration-150 cursor-pointer"
                             title="View Profile"
                           >
                             <Eye size={15} />
-                          </button>
-                          <button
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => openEditForm(student)}
-                            className="p-1.5 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-purple transition-colors cursor-pointer"
+                            className="p-1.5 rounded-md border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-purple transition-colors duration-150 cursor-pointer"
                             title="Edit Details"
                           >
                             <Edit2 size={15} />
-                          </button>
-                          <button
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => setDeletingStudent(student)}
-                            className="p-1.5 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-error transition-colors cursor-pointer"
+                            className="p-1.5 rounded-md border border-surface-border hover:bg-surface-bg text-text-muted hover:text-error transition-colors duration-150 cursor-pointer"
                             title="Delete Student"
                           >
                             <Trash2 size={15} />
-                          </button>
+                          </motion.button>
                         </div>
                       </td>
                     </motion.tr>
@@ -388,19 +396,23 @@ export const StudentList = () => {
 
           {/* Cards fallback (Mobile View) */}
           <div className="md:hidden grid grid-cols-1 gap-4">
-            {activeStudents.map((student) => (
+            {activeStudents.map((student, idx) => (
               <motion.div
                 key={student.id}
-                layoutId={`card-${student.id}`}
-                className="p-5 rounded-card border border-surface-border bg-surface-card space-y-4"
+                custom={idx}
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover={{ y: -2 }}
+                className="p-5 rounded-lg border border-surface-border bg-surface-card space-y-4"
               >
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-bold text-text-title text-base leading-snug">{student.name}</h4>
                     <p className="text-xs font-semibold text-text-muted mt-0.5">{student.email}</p>
                   </div>
-                  <span className={`px-2.5 py-0.5 text-xs font-extrabold rounded-full ${
-                    student.cgpa >= 8.5 ? 'bg-brand-purple/10 text-brand-purple' : 'bg-brand-purple/10 text-brand-purple'
+                  <span className={`px-2.5 py-0.5 text-xs font-extrabold rounded-sm ${
+                    student.cgpa >= 8.5 ? 'bg-success/10 text-success' : 'bg-success/10 text-success'
                   }`}>
                     {student.cgpa.toFixed(2)}
                   </span>
@@ -418,53 +430,61 @@ export const StudentList = () => {
                 </div>
 
                 <div className="flex items-center justify-end space-x-2 pt-3 border-t border-surface-border">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => navigate(`/students/${student.id}`)}
-                    className="flex-1 py-2 rounded-button border border-surface-border bg-surface-bg text-text-body flex items-center justify-center space-x-1 text-xs cursor-pointer"
+                    className="flex-1 py-2 rounded-md border border-surface-border bg-surface-bg text-text-body flex items-center justify-center space-x-1 text-xs cursor-pointer transition-colors duration-150"
                   >
                     <Eye size={14} />
                     <span>Profile</span>
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => openEditForm(student)}
-                    className="p-2 rounded-button border border-surface-border text-text-muted hover:text-brand-purple cursor-pointer"
+                    className="p-2 rounded-md border border-surface-border text-text-muted hover:text-brand-purple transition-colors duration-150 cursor-pointer"
                   >
                     <Edit2 size={14} />
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setDeletingStudent(student)}
-                    className="p-2 rounded-button border border-surface-border text-text-muted hover:text-error cursor-pointer"
+                    className="p-2 rounded-md border border-surface-border text-text-muted hover:text-error transition-colors duration-150 cursor-pointer"
                   >
                     <Trash2 size={14} />
-                  </button>
+                  </motion.button>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          {/* Pagination bar (Only visible when search/department filters are NOT active) */}
+          {/* Pagination bar */}
           {!isSearchActive && studentsData && studentsData.totalPages > 1 && (
-            <div className="flex items-center justify-between p-4 border border-surface-border rounded-card bg-surface-card">
+            <div className="flex items-center justify-between p-4 border border-surface-border rounded-lg bg-surface-card">
               <span className="text-xs font-medium text-text-muted">
                 Showing page <span className="font-semibold text-text-title">{page + 1}</span> of{' '}
                 <span className="font-semibold text-text-title">{studentsData.totalPages}</span>
               </span>
 
               <div className="flex space-x-2">
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => handlePageChange(page - 1)}
                   disabled={studentsData.first}
-                  className="p-2 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 cursor-pointer"
+                  className="p-2 rounded-md border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 transition-colors duration-150 cursor-pointer"
                 >
                   <ChevronLeft size={16} />
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => handlePageChange(page + 1)}
                   disabled={studentsData.last}
-                  className="p-2 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 cursor-pointer"
+                  className="p-2 rounded-md border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 transition-colors duration-150 cursor-pointer"
                 >
                   <ChevronRight size={16} />
-                </button>
+                </motion.button>
               </div>
             </div>
           )}
@@ -472,11 +492,12 @@ export const StudentList = () => {
       ) : (
         /* Empty state view */
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="p-12 rounded-card border border-surface-border bg-surface-card text-center max-w-xl mx-auto space-y-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="p-12 rounded-lg border border-surface-border bg-surface-card text-center max-w-xl mx-auto space-y-4"
         >
-          <div className="w-16 h-16 rounded-full bg-brand-purple/10 text-brand-purple flex items-center justify-center mx-auto mb-2">
+          <div className="w-16 h-16 rounded-full bg-surface-border/30 text-text-muted flex items-center justify-center mx-auto mb-2">
             <AlertCircle size={28} />
           </div>
           <h3 className="text-xl font-bold">No Students Found</h3>
@@ -492,17 +513,19 @@ export const StudentList = () => {
                   setSearchQuery('');
                   setSelectedDept('');
                 }}
-                className="px-4 py-2 border border-surface-border hover:bg-surface-bg text-text-title font-medium rounded-button text-sm transition-colors cursor-pointer"
+                className="px-4 py-2 border border-surface-border hover:bg-surface-bg text-text-title font-medium rounded-md text-sm transition-colors duration-150 cursor-pointer"
               >
                 Clear Query
               </button>
             ) : (
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setIsFormOpen(true)}
-                className="px-5 py-2.5 bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-medium rounded-button text-sm transition-colors cursor-pointer"
+                className="px-5 py-2.5 bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-medium rounded-md text-sm transition-colors duration-150 cursor-pointer"
               >
                 Create First Record
-              </button>
+              </motion.button>
             )}
           </div>
         </motion.div>
@@ -512,7 +535,6 @@ export const StudentList = () => {
       <AnimatePresence>
         {isFormOpen && (
           <div className="fixed inset-0 z-40 overflow-hidden flex items-center justify-center p-4">
-            {/* Dark Backdrop overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -521,15 +543,13 @@ export const StudentList = () => {
               className="fixed inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
             />
 
-            {/* Centered Modal Box */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="relative w-full max-w-lg bg-surface-card border border-surface-border p-6 rounded-card z-10 flex flex-col max-h-[90vh] overflow-hidden"
+              className="relative w-full max-w-lg bg-surface-card border border-surface-border p-6 rounded-lg z-10 flex flex-col max-h-[90vh] overflow-hidden"
             >
-              {/* Header */}
               <div className="flex justify-between items-center pb-4 border-b border-surface-border">
                 <div>
                   <h3 className="text-xl font-bold">
@@ -541,13 +561,12 @@ export const StudentList = () => {
                 </div>
                 <button
                   onClick={closeForm}
-                  className="p-1.5 rounded-full text-text-muted hover:bg-surface-bg hover:text-text-title transition-colors cursor-pointer"
+                  className="p-1.5 rounded-md text-text-muted hover:bg-surface-bg hover:text-text-title transition-colors duration-150 cursor-pointer"
                 >
                   <X size={18} />
                 </button>
               </div>
 
-              {/* Form container body */}
               <div className="flex-1 overflow-y-auto py-6 pr-1">
                 <StudentForm
                   initialData={editingStudent}

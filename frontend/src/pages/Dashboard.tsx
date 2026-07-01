@@ -16,7 +16,7 @@ import { StatCard } from '../components/StatCard';
 import { DashboardSkeleton } from '../components/SkeletonLoader';
 import toast from 'react-hot-toast';
 
-const CHART_GREEN = '#00d992';
+const CHART_COLORS = ['#8b5cf6', '#7c3aed', '#a78bfa', '#6366f1', '#818cf8', '#c4b5fd'];
 
 export const Dashboard = () => {
   const [students, setStudents] = useState<StudentResponse[]>([]);
@@ -63,15 +63,28 @@ export const Dashboard = () => {
 
   const recentStudents = students.slice(0, 5);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' as const } },
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
       className="space-y-8"
     >
       {/* Welcome Banner */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-6 md:p-8 rounded-card border border-surface-border bg-surface-card relative overflow-hidden group">
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-start md:items-center p-6 md:p-8 rounded-lg border border-surface-border bg-surface-card relative overflow-hidden group">
         <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/[0.04] to-brand-indigo/[0.02]" />
         <div className="space-y-2 z-10">
           <h2 className="text-3xl font-extrabold tracking-tight">
@@ -83,17 +96,17 @@ export const Dashboard = () => {
         </div>
         <motion.button
           whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => navigate('/students', { state: { openCreateForm: true } })}
-          className="mt-4 md:mt-0 px-5 py-2.5 rounded-button bg-brand-purple text-[#101010] font-semibold flex items-center space-x-2 cursor-pointer z-10 hover:bg-brand-purple-hover transition-colors"
+          className="mt-4 md:mt-0 px-5 py-2.5 rounded-md bg-brand-purple text-[#101010] font-semibold flex items-center space-x-2 cursor-pointer z-10 hover:bg-brand-purple-hover transition-colors duration-150"
         >
           <Plus size={18} />
           <span>New Enrollment</span>
         </motion.button>
-      </div>
+      </motion.div>
 
       {/* Metric Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
           title="Total Students"
           value={totalStudents}
@@ -116,16 +129,16 @@ export const Dashboard = () => {
           description="Active branches of study"
           delay={0.3}
         />
-      </div>
+      </motion.div>
 
       {/* Analytics & Recent Enrollments */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Department chart */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="lg:col-span-2 p-6 rounded-card border border-surface-border bg-surface-card flex flex-col justify-between"
+          transition={{ duration: 0.3, delay: 0.15, ease: 'easeOut' }}
+          className="lg:col-span-2 p-6 rounded-lg border border-surface-border bg-surface-card flex flex-col justify-between"
         >
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold flex items-center space-x-2">
@@ -144,12 +157,12 @@ export const Dashboard = () => {
                   <XAxis dataKey="name" stroke="#8b949e" fontSize={12} tickLine={false} />
                   <YAxis stroke="#8b949e" fontSize={12} tickLine={false} allowDecimals={false} />
                   <Tooltip
-                    cursor={{ fill: 'rgba(0, 217, 146, 0.05)' }}
+                    cursor={{ fill: 'rgba(139, 92, 246, 0.05)' }}
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         const data = payload[0].payload;
                         return (
-                          <div className="p-3 bg-surface-card border border-surface-border rounded-card text-xs font-semibold text-text-title">
+                          <div className="p-3 bg-surface-card border border-surface-border rounded-md text-xs font-semibold text-text-title">
                             <p className="font-bold text-brand-purple">{data.fullName}</p>
                             <p className="mt-1">Students: {data.count}</p>
                           </div>
@@ -160,7 +173,7 @@ export const Dashboard = () => {
                   />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={45}>
                     {chartData.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={CHART_GREEN} fillOpacity={0.8 - index * 0.08} />
+                      <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -175,16 +188,16 @@ export const Dashboard = () => {
 
         {/* Recent Students Panel */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="p-6 rounded-card border border-surface-border bg-surface-card flex flex-col justify-between"
+          transition={{ duration: 0.3, delay: 0.2, ease: 'easeOut' }}
+          className="p-6 rounded-lg border border-surface-border bg-surface-card flex flex-col justify-between"
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold">Recent Enrollments</h3>
             <button
               onClick={() => navigate('/students')}
-              className="text-xs font-bold text-brand-purple flex items-center space-x-1 hover:text-brand-purple-hover"
+              className="text-xs font-bold text-brand-purple flex items-center space-x-1 hover:text-brand-purple-hover transition-colors duration-150"
             >
               <span>View All</span>
               <ArrowRight size={14} />
@@ -198,8 +211,9 @@ export const Dashboard = () => {
                   key={s.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * idx }}
-                  className="flex items-center justify-between p-3 rounded-button border border-surface-border bg-surface-bg/40 hover:bg-surface-bg transition-colors cursor-pointer"
+                  transition={{ delay: 0.05 * idx, duration: 0.25, ease: 'easeOut' }}
+                  whileHover={{ y: -2 }}
+                  className="flex items-center justify-between p-3 rounded-md border border-surface-border bg-surface-bg/40 hover:bg-surface-bg transition-colors duration-150 cursor-pointer"
                   onClick={() => navigate(`/students/${s.id}`)}
                 >
                   <div className="flex items-center space-x-3 min-w-0">
@@ -212,7 +226,7 @@ export const Dashboard = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-bold px-2 py-0.5 bg-brand-purple/10 text-brand-purple rounded-full">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-sm bg-success/10 text-success">
                       {s.cgpa.toFixed(2)}
                     </span>
                   </div>
@@ -225,7 +239,7 @@ export const Dashboard = () => {
             )}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

@@ -6,8 +6,7 @@ import { motion } from 'framer-motion';
 import { Loader2, Save, X } from 'lucide-react';
 import { StudentRequest, StudentResponse } from '../types/student';
 
-// Zod Schema matching backend spring boot validations
-export const studentSchema = z.object({
+const studentSchema = z.object({
   name: z.string()
     .min(2, { message: 'Name must be between 2 and 100 characters' })
     .max(100, { message: 'Name must be between 2 and 100 characters' }),
@@ -68,7 +67,6 @@ export const StudentForm = ({
     },
   });
 
-  // Pre-fill form on edit mode
   useEffect(() => {
     if (initialData) {
       reset({
@@ -85,7 +83,6 @@ export const StudentForm = ({
     try {
       await onSubmit(values);
     } catch (error: any) {
-      // Map server 400 validation error responses
       if (error.response && error.response.status === 400) {
         const fieldErrors = error.response.data;
         Object.keys(fieldErrors).forEach((field) => {
@@ -94,9 +91,7 @@ export const StudentForm = ({
             message: fieldErrors[field],
           });
         });
-      } 
-      // Map server 409 conflict error responses (duplicates)
-      else if (error.response && error.response.status === 409) {
+      } else if (error.response && error.response.status === 409) {
         const errorMsg = error.response.data.message || '';
         if (errorMsg.toLowerCase().includes('email')) {
           setError('email', {
@@ -113,150 +108,88 @@ export const StudentForm = ({
     }
   };
 
+  const inputClass = (field: string) =>
+    `w-full px-4 py-2.5 rounded-md border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all duration-150 ${
+      errors[field] ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
+    }`;
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-      {/* Name Input */}
       <div className="space-y-1">
         <label className="text-sm font-semibold text-text-title block" htmlFor="name">
           Full Name
         </label>
-        <input
-          id="name"
-          type="text"
-          placeholder="e.g. Arun Kumar"
-          {...register('name')}
-          className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
-            errors.name ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
-          }`}
-        />
+        <input id="name" type="text" placeholder="e.g. Arun Kumar" {...register('name')} className={inputClass('name')} />
         {errors.name && (
-          <motion.p
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-medium text-error mt-1"
-          >
+          <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs font-medium text-error mt-1">
             {errors.name.message as string}
           </motion.p>
         )}
       </div>
 
-      {/* Email Input */}
       <div className="space-y-1">
         <label className="text-sm font-semibold text-text-title block" htmlFor="email">
           Email Address
         </label>
-        <input
-          id="email"
-          type="email"
-          placeholder="e.g. arun@university.edu"
-          {...register('email')}
-          className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
-            errors.email ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
-          }`}
-        />
+        <input id="email" type="email" placeholder="e.g. arun@university.edu" {...register('email')} className={inputClass('email')} />
         {errors.email && (
-          <motion.p
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-medium text-error mt-1"
-          >
+          <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs font-medium text-error mt-1">
             {errors.email.message as string}
           </motion.p>
         )}
       </div>
 
-      {/* Department Dropdown */}
       <div className="space-y-1">
         <label className="text-sm font-semibold text-text-title block" htmlFor="department">
           Department
         </label>
-        <select
-          id="department"
-          {...register('department')}
-          className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
-            errors.department ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
-          }`}
-        >
+        <select id="department" {...register('department')} className={inputClass('department')}>
           <option value="">Select a department</option>
           {DEPARTMENTS.map((dept) => (
-            <option key={dept} value={dept}>
-              {dept}
-            </option>
+            <option key={dept} value={dept}>{dept}</option>
           ))}
         </select>
         {errors.department && (
-          <motion.p
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-medium text-error mt-1"
-          >
+          <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs font-medium text-error mt-1">
             {errors.department.message as string}
           </motion.p>
         )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Roll Number Input */}
         <div className="space-y-1">
           <label className="text-sm font-semibold text-text-title block" htmlFor="rollNumber">
             Roll Number
           </label>
-          <input
-            id="rollNumber"
-            type="text"
-            placeholder="e.g. CS2026-001"
-            {...register('rollNumber')}
-            className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
-              errors.rollNumber ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
-            }`}
-          />
+          <input id="rollNumber" type="text" placeholder="e.g. CS2026-001" {...register('rollNumber')} className={inputClass('rollNumber')} />
           {errors.rollNumber && (
-            <motion.p
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-xs font-medium text-error mt-1"
-            >
+            <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs font-medium text-error mt-1">
               {errors.rollNumber.message as string}
             </motion.p>
           )}
         </div>
 
-        {/* CGPA Input */}
         <div className="space-y-1">
           <label className="text-sm font-semibold text-text-title block" htmlFor="cgpa">
             CGPA (0.0 - 10.0)
           </label>
-          <input
-            id="cgpa"
-            type="number"
-            step="0.01"
-            placeholder="e.g. 9.15"
-            {...register('cgpa')}
-            className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
-              errors.cgpa ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
-            }`}
-          />
+          <input id="cgpa" type="number" step="0.01" placeholder="e.g. 9.15" {...register('cgpa')} className={inputClass('cgpa')} />
           {errors.cgpa && (
-            <motion.p
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-xs font-medium text-error mt-1"
-            >
+            <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs font-medium text-error mt-1">
               {errors.cgpa.message as string}
             </motion.p>
           )}
         </div>
       </div>
 
-      {/* Buttons */}
       <div className="flex space-x-3 pt-4 border-t border-surface-border">
         <motion.button
           type="button"
           whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.97 }}
           onClick={onCancel}
           disabled={isLoading}
-          className="flex-1 py-3 px-4 rounded-button border border-surface-border text-text-title font-medium hover:bg-surface-bg transition-colors flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+          className="flex-1 py-2.5 px-4 rounded-md border border-surface-border text-text-title font-medium hover:bg-surface-bg transition-colors duration-150 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
         >
           <X size={16} />
           <span>Cancel</span>
@@ -265,9 +198,9 @@ export const StudentForm = ({
         <motion.button
           type="submit"
           whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.97 }}
           disabled={isLoading || (!isDirty && initialData !== undefined)}
-          className="flex-1 py-3 px-4 rounded-button bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-medium flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+          className="flex-1 py-2.5 px-4 rounded-md bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-medium flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50 transition-colors duration-150"
         >
           {isLoading ? (
             <Loader2 size={16} className="animate-spin" />

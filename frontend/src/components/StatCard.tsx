@@ -17,14 +17,12 @@ const AnimatedCounter = ({ value, decimals = 0 }: { value: number; decimals?: nu
   useEffect(() => {
     let startTimestamp: number | null = null;
     const duration = 1200;
-    const startValue = 0;
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const easedProgress = progress * (2 - progress);
-      const currentValue = startValue + (value - startValue) * easedProgress;
-      setCount(currentValue);
+      const eased = progress * (2 - progress);
+      setCount((value - 0) * eased);
       if (progress < 1) {
         window.requestAnimationFrame(step);
       } else {
@@ -48,13 +46,14 @@ export const StatCard = ({
 }: StatCardProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay, type: 'spring', stiffness: 100 }}
+      transition={{ duration: 0.3, delay, ease: 'easeOut' }}
       whileHover={{ y: -4 }}
-      className="p-6 rounded-card border border-surface-border bg-surface-card flex items-center relative overflow-hidden group"
+      whileTap={{ scale: 0.99 }}
+      className="p-6 rounded-lg border border-surface-border bg-surface-card flex items-center relative overflow-hidden group cursor-default"
     >
-      <div className="p-3 rounded-button bg-brand-purple text-[#101010]">
+      <div className="p-3 rounded-md bg-brand-purple text-[#101010]">
         <Icon size={22} />
       </div>
 

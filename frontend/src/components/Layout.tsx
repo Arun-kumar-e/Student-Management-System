@@ -17,7 +17,6 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -46,7 +45,7 @@ export const Layout = ({ children }: LayoutProps) => {
           pathnames.map((name, index) => {
             const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
             const isLast = index === pathnames.length - 1;
-            const formattedName = isNaN(Number(name)) 
+            const formattedName = isNaN(Number(name))
               ? name.charAt(0).toUpperCase() + name.slice(1)
               : `Detail #${name}`;
 
@@ -80,7 +79,7 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* Sidebar — Desktop */}
       <aside className="hidden md:flex flex-col w-64 border-r border-surface-border bg-surface-card z-20">
         <div className="flex items-center space-x-3 px-6 py-6 border-b border-surface-border cursor-pointer" onClick={() => navigate('/')}>
-          <div className="p-2 rounded-card bg-brand-purple text-[#101010]">
+          <div className="p-2 rounded-md bg-brand-purple text-[#101010]">
             <GraduationCap size={24} />
           </div>
           <div>
@@ -95,7 +94,7 @@ export const Layout = ({ children }: LayoutProps) => {
               key={item.name}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center space-x-3 px-4 py-2.5 rounded-button font-medium transition-all group ${
+                `flex items-center space-x-3 px-4 py-2.5 rounded-md font-medium transition-all duration-200 group ${
                   isActive
                     ? 'bg-brand-purple/10 text-brand-purple'
                     : 'text-text-body hover:bg-surface-bg hover:text-text-title'
@@ -106,15 +105,19 @@ export const Layout = ({ children }: LayoutProps) => {
                 const Icon = item.icon;
                 return (
                   <>
-                    <Icon 
-                      size={20} 
-                      className={`transition-transform duration-300 group-hover:scale-110 ${
+                    <Icon
+                      size={20}
+                      className={`transition-transform duration-200 group-hover:scale-110 ${
                         isActive ? 'text-brand-purple' : 'text-text-muted group-hover:text-text-title'
-                      }`} 
+                      }`}
                     />
                     <span>{item.name}</span>
                     {isActive && (
-                      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-purple" />
+                      <motion.span
+                        layoutId="activeDot"
+                        className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-purple"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
                     )}
                   </>
                 );
@@ -124,7 +127,7 @@ export const Layout = ({ children }: LayoutProps) => {
         </nav>
 
         <div className="p-4 border-t border-surface-border">
-          <div className="rounded-card p-4 bg-surface-bg text-center space-y-1 border border-surface-border">
+          <div className="rounded-lg p-4 bg-surface-bg text-center space-y-1 border border-surface-border">
             <p className="text-xs text-text-muted font-medium">Running Local Port</p>
             <p className="text-xs font-bold text-text-title">REST: 8080 | WEB: 3000</p>
           </div>
@@ -156,7 +159,7 @@ export const Layout = ({ children }: LayoutProps) => {
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1 rounded-button text-text-muted hover:bg-surface-bg hover:text-text-title"
+                  className="p-1 rounded-md text-text-muted hover:bg-surface-bg hover:text-text-title"
                 >
                   <X size={20} />
                 </button>
@@ -168,7 +171,7 @@ export const Layout = ({ children }: LayoutProps) => {
                     key={item.name}
                     to={item.path}
                     className={({ isActive }) =>
-                      `flex items-center space-x-3 px-4 py-2.5 rounded-button font-medium transition-all ${
+                      `flex items-center space-x-3 px-4 py-2.5 rounded-md font-medium transition-all duration-200 ${
                         isActive
                           ? 'bg-brand-purple/10 text-brand-purple font-semibold'
                           : 'text-text-body hover:bg-surface-bg'
@@ -198,7 +201,7 @@ export const Layout = ({ children }: LayoutProps) => {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-button text-text-body hover:bg-surface-bg hover:text-text-title transition-colors"
+              className="md:hidden p-2 rounded-md text-text-body hover:bg-surface-bg hover:text-text-title transition-colors duration-150"
             >
               <Menu size={20} />
             </button>
