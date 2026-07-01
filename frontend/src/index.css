@@ -64,9 +64,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .detail-banner {
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklch, var(--color-brand-purple) 18%, var(--color-surface-card)) 0%,
-    color-mix(in oklch, var(--color-brand-indigo) 10%, var(--color-surface-bg)) 100%
-  );
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      color-mix(in oklch, var(--color-brand-purple) 4%, transparent) 20px,
+      color-mix(in oklch, var(--color-brand-purple) 4%, transparent) 21px
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(in oklch, var(--color-brand-purple) 18%, var(--color-surface-card)) 0%,
+      color-mix(in oklch, var(--color-brand-indigo) 10%, var(--color-surface-bg)) 100%
+    );
 }

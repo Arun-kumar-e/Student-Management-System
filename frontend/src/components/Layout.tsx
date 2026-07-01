@@ -126,12 +126,14 @@ export const Layout = ({ children }: LayoutProps) => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-surface-border">
-          <div className="rounded-lg p-4 bg-surface-bg text-center space-y-1 border border-surface-border">
-            <p className="text-xs text-text-muted font-medium">Running Local Port</p>
-            <p className="text-xs font-bold text-text-title">REST: 8080 | WEB: 3000</p>
+        {import.meta.env.DEV && (
+          <div className="p-4 border-t border-surface-border">
+            <div className="rounded-lg p-4 bg-surface-bg text-center space-y-1 border border-surface-border">
+              <p className="text-xs text-text-muted font-medium">Running Local Port</p>
+              <p className="text-xs font-bold text-text-title">REST: 8080 | WEB: 3000</p>
+            </div>
           </div>
-        </div>
+        )}
       </aside>
 
       {/* Mobile Drawer */}

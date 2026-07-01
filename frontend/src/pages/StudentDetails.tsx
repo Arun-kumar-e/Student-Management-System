@@ -163,7 +163,7 @@ export const StudentDetails = () => {
 
           <div className="px-8 pb-8 relative flex-1 flex flex-col">
             <div className="absolute -top-14 left-8">
-              <div className="w-28 h-28 rounded-full border-4 border-surface-card bg-brand-purple text-[#101010] flex items-center justify-center text-4xl font-extrabold">
+              <div className="w-28 h-28 rounded-full border-4 border-surface-card bg-brand-purple text-white flex items-center justify-center text-4xl font-extrabold">
                 {student.name.charAt(0)}
               </div>
             </div>
