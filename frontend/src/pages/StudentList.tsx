@@ -189,7 +189,7 @@ export const StudentList = () => {
             setEditingStudent(undefined);
             setIsFormOpen(true);
           }}
-          className="px-5 py-3 rounded-xl bg-gradient-to-r from-brand-purple to-brand-indigo hover:from-brand-purple-hover text-surface-bg font-semibold flex items-center justify-center space-x-2 shadow-md shadow-brand-purple/20 cursor-pointer text-sm"
+          className="px-5 py-2.5 rounded-button bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-semibold flex items-center justify-center space-x-2 cursor-pointer text-sm"
         >
           <Plus size={18} />
           <span>Add Student</span>
@@ -197,7 +197,7 @@ export const StudentList = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-2xl glass-panel border border-surface-border bg-surface-card shadow-premium flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 rounded-card border border-surface-border bg-surface-card flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1">
           <Search size={18} className="absolute left-4 top-3.5 text-text-muted" />
@@ -210,7 +210,7 @@ export const StudentList = () => {
               setSelectedDept(''); // Reset dept if searching
               setPage(0);
             }}
-            className="w-full pl-12 pr-4 py-3 rounded-xl border border-surface-border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm"
+            className="w-full pl-12 pr-4 py-2.5 rounded-button border border-surface-border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm"
           />
           {searchQuery && (
             <button
@@ -233,7 +233,7 @@ export const StudentList = () => {
                 setSearchQuery(''); // Reset search if filtering dept
                 setPage(0);
               }}
-              className="w-full pl-9 pr-8 py-3 rounded-xl border border-surface-border bg-surface-bg text-text-title focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm appearance-none cursor-pointer min-w-[200px]"
+              className="w-full pl-9 pr-8 py-2.5 rounded-button border border-surface-border bg-surface-bg text-text-title focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all text-sm appearance-none cursor-pointer min-w-[200px]"
             >
               <option value="">All Departments</option>
               {DEPARTMENTS.map((dept) => (
@@ -253,7 +253,7 @@ export const StudentList = () => {
               setPage(0);
               fetchStudents();
             }}
-            className="p-3 rounded-xl border border-surface-border bg-surface-card hover:bg-surface-bg text-text-muted hover:text-text-title transition-colors cursor-pointer"
+            className="p-2.5 rounded-button border border-surface-border bg-surface-card hover:bg-surface-bg text-text-muted hover:text-text-title transition-colors cursor-pointer"
             title="Reset Filters"
           >
             <RefreshCw size={18} />
@@ -274,7 +274,7 @@ export const StudentList = () => {
       ) : activeStudents.length > 0 ? (
         <div className="space-y-6">
           {/* Table view (Tablet/Desktop) */}
-          <div className="hidden md:block overflow-hidden rounded-3xl border border-surface-border bg-surface-card shadow-premium">
+          <div className="hidden md:block overflow-hidden rounded-card border border-surface-border bg-surface-card">
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-sm">
                 <thead>
@@ -346,10 +346,10 @@ export const StudentList = () => {
                       <td className="px-6 py-4 text-center">
                         <span className={`inline-block px-2.5 py-1 text-xs font-extrabold rounded-full ${
                           student.cgpa >= 8.5 
-                            ? 'bg-success/15 text-success' 
+                            ? 'bg-brand-purple/10 text-brand-purple' 
                             : student.cgpa >= 7.0 
-                              ? 'bg-brand-indigo/15 text-brand-indigo' 
-                              : 'bg-warning/15 text-warning'
+                              ? 'bg-brand-purple/10 text-brand-purple' 
+                              : 'bg-warning/10 text-warning'
                         }`}>
                           {student.cgpa.toFixed(2)}
                         </span>
@@ -358,21 +358,21 @@ export const StudentList = () => {
                         <div className="flex justify-end items-center space-x-2">
                           <button
                             onClick={() => navigate(`/students/${student.id}`)}
-                            className="p-1.5 rounded-lg border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-indigo transition-colors cursor-pointer"
+                            className="p-1.5 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-purple transition-colors cursor-pointer"
                             title="View Profile"
                           >
                             <Eye size={15} />
                           </button>
                           <button
                             onClick={() => openEditForm(student)}
-                            className="p-1.5 rounded-lg border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-purple transition-colors cursor-pointer"
+                            className="p-1.5 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-brand-purple transition-colors cursor-pointer"
                             title="Edit Details"
                           >
                             <Edit2 size={15} />
                           </button>
                           <button
                             onClick={() => setDeletingStudent(student)}
-                            className="p-1.5 rounded-lg border border-surface-border hover:bg-surface-bg text-text-muted hover:text-error transition-colors cursor-pointer"
+                            className="p-1.5 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-error transition-colors cursor-pointer"
                             title="Delete Student"
                           >
                             <Trash2 size={15} />
@@ -392,7 +392,7 @@ export const StudentList = () => {
               <motion.div
                 key={student.id}
                 layoutId={`card-${student.id}`}
-                className="p-5 rounded-2xl border border-surface-border bg-surface-card shadow-sm space-y-4"
+                className="p-5 rounded-card border border-surface-border bg-surface-card space-y-4"
               >
                 <div className="flex justify-between items-start">
                   <div>
@@ -400,7 +400,7 @@ export const StudentList = () => {
                     <p className="text-xs font-semibold text-text-muted mt-0.5">{student.email}</p>
                   </div>
                   <span className={`px-2.5 py-0.5 text-xs font-extrabold rounded-full ${
-                    student.cgpa >= 8.5 ? 'bg-success/15 text-success' : 'bg-brand-indigo/15 text-brand-indigo'
+                    student.cgpa >= 8.5 ? 'bg-brand-purple/10 text-brand-purple' : 'bg-brand-purple/10 text-brand-purple'
                   }`}>
                     {student.cgpa.toFixed(2)}
                   </span>
@@ -420,20 +420,20 @@ export const StudentList = () => {
                 <div className="flex items-center justify-end space-x-2 pt-3 border-t border-surface-border">
                   <button
                     onClick={() => navigate(`/students/${student.id}`)}
-                    className="flex-1 py-2 rounded-lg border border-surface-border bg-surface-bg text-text-body flex items-center justify-center space-x-1 text-xs cursor-pointer"
+                    className="flex-1 py-2 rounded-button border border-surface-border bg-surface-bg text-text-body flex items-center justify-center space-x-1 text-xs cursor-pointer"
                   >
                     <Eye size={14} />
                     <span>Profile</span>
                   </button>
                   <button
                     onClick={() => openEditForm(student)}
-                    className="p-2 rounded-lg border border-surface-border text-text-muted hover:text-brand-purple cursor-pointer"
+                    className="p-2 rounded-button border border-surface-border text-text-muted hover:text-brand-purple cursor-pointer"
                   >
                     <Edit2 size={14} />
                   </button>
                   <button
                     onClick={() => setDeletingStudent(student)}
-                    className="p-2 rounded-lg border border-surface-border text-text-muted hover:text-error cursor-pointer"
+                    className="p-2 rounded-button border border-surface-border text-text-muted hover:text-error cursor-pointer"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -444,7 +444,7 @@ export const StudentList = () => {
 
           {/* Pagination bar (Only visible when search/department filters are NOT active) */}
           {!isSearchActive && studentsData && studentsData.totalPages > 1 && (
-            <div className="flex items-center justify-between p-4 border border-surface-border rounded-2xl bg-surface-card shadow-sm">
+            <div className="flex items-center justify-between p-4 border border-surface-border rounded-card bg-surface-card">
               <span className="text-xs font-medium text-text-muted">
                 Showing page <span className="font-semibold text-text-title">{page + 1}</span> of{' '}
                 <span className="font-semibold text-text-title">{studentsData.totalPages}</span>
@@ -454,14 +454,14 @@ export const StudentList = () => {
                 <button
                   onClick={() => handlePageChange(page - 1)}
                   disabled={studentsData.first}
-                  className="p-2 rounded-lg border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 cursor-pointer"
+                  className="p-2 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 cursor-pointer"
                 >
                   <ChevronLeft size={16} />
                 </button>
                 <button
                   onClick={() => handlePageChange(page + 1)}
                   disabled={studentsData.last}
-                  className="p-2 rounded-lg border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 cursor-pointer"
+                  className="p-2 rounded-button border border-surface-border hover:bg-surface-bg text-text-muted hover:text-text-title disabled:opacity-40 cursor-pointer"
                 >
                   <ChevronRight size={16} />
                 </button>
@@ -474,7 +474,7 @@ export const StudentList = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="p-12 rounded-3xl border border-surface-border bg-surface-card text-center max-w-xl mx-auto shadow-premium space-y-4"
+          className="p-12 rounded-card border border-surface-border bg-surface-card text-center max-w-xl mx-auto space-y-4"
         >
           <div className="w-16 h-16 rounded-full bg-brand-purple/10 text-brand-purple flex items-center justify-center mx-auto mb-2">
             <AlertCircle size={28} />
@@ -492,14 +492,14 @@ export const StudentList = () => {
                   setSearchQuery('');
                   setSelectedDept('');
                 }}
-                className="px-4 py-2 border border-surface-border hover:bg-surface-bg text-text-title font-medium rounded-xl text-sm transition-colors cursor-pointer"
+                className="px-4 py-2 border border-surface-border hover:bg-surface-bg text-text-title font-medium rounded-button text-sm transition-colors cursor-pointer"
               >
                 Clear Query
               </button>
             ) : (
               <button
                 onClick={() => setIsFormOpen(true)}
-                className="px-5 py-2.5 bg-gradient-to-r from-brand-purple to-brand-indigo text-surface-bg font-medium rounded-xl text-sm transition-transform hover:scale-[1.02] cursor-pointer"
+                className="px-5 py-2.5 bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-medium rounded-button text-sm transition-colors cursor-pointer"
               >
                 Create First Record
               </button>
@@ -527,7 +527,7 @@ export const StudentList = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="relative w-full max-w-lg bg-surface-card border border-surface-border p-6 shadow-premium rounded-3xl z-10 flex flex-col max-h-[90vh] overflow-hidden"
+              className="relative w-full max-w-lg bg-surface-card border border-surface-border p-6 rounded-card z-10 flex flex-col max-h-[90vh] overflow-hidden"
             >
               {/* Header */}
               <div className="flex justify-between items-center pb-4 border-b border-surface-border">

@@ -35,7 +35,7 @@ export const DeleteConfirmationModal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-surface-border bg-surface-card p-6 shadow-premium z-10"
+            className="relative w-full max-w-md overflow-hidden rounded-card border border-surface-border bg-surface-card p-6 z-10"
           >
             {/* Close button */}
             <button
@@ -66,7 +66,7 @@ export const DeleteConfirmationModal = ({
                   whileTap={{ scale: 0.98 }}
                   onClick={onClose}
                   disabled={isDeleting}
-                  className="flex-1 py-3 px-4 rounded-xl border border-surface-border font-medium text-text-title hover:bg-surface-bg transition-colors cursor-pointer disabled:opacity-50"
+                  className="flex-1 py-3 px-4 rounded-button border border-surface-border font-medium text-text-title hover:bg-surface-bg transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </motion.button>
@@ -75,7 +75,7 @@ export const DeleteConfirmationModal = ({
                   whileTap={{ scale: 0.98 }}
                   onClick={onConfirm}
                   disabled={isDeleting}
-                  className="flex-1 py-3 px-4 rounded-xl bg-error text-white font-medium hover:bg-error/95 shadow-lg shadow-error/10 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+                  className="flex-1 py-3 px-4 rounded-button bg-error text-white font-medium hover:bg-error/95 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
                 >
                   {isDeleting ? (
                     <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

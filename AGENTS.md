@@ -20,5 +20,8 @@ Load the following skills from `.agents/skills/` when working on this project:
 - `figma-implement-design` — Translating designs to code
 - `java-springboot` — Backend CORS config and dependency updates
 
+## Design Reference
+Read `DESIGN.md` before writing any UI — it defines the project's design tokens, component specs, and visual language.
+
 ## Backend API
 The backend is a Spring Boot app in the same repo. All REST endpoints are under `src/main/java/`.

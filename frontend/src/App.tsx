@@ -25,10 +25,10 @@ function App() {
             background: 'var(--color-surface-card)',
             color: 'var(--color-text-title)',
             border: '1px solid var(--color-surface-border)',
-            borderRadius: '16px',
+            borderRadius: '8px',
             fontSize: '14px',
             fontWeight: '600',
-            boxShadow: 'var(--shadow-premium)',
+            boxShadow: 'none',
           },
           duration: 3500,
         }}

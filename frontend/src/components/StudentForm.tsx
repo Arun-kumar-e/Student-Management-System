@@ -125,7 +125,7 @@ export const StudentForm = ({
           type="text"
           placeholder="e.g. Arun Kumar"
           {...register('name')}
-          className={`w-full px-4 py-3 rounded-xl border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
+          className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
             errors.name ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
           }`}
         />
@@ -150,7 +150,7 @@ export const StudentForm = ({
           type="email"
           placeholder="e.g. arun@university.edu"
           {...register('email')}
-          className={`w-full px-4 py-3 rounded-xl border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
+          className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
             errors.email ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
           }`}
         />
@@ -173,7 +173,7 @@ export const StudentForm = ({
         <select
           id="department"
           {...register('department')}
-          className={`w-full px-4 py-3 rounded-xl border bg-surface-bg text-text-title focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
+          className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
             errors.department ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
           }`}
         >
@@ -206,7 +206,7 @@ export const StudentForm = ({
             type="text"
             placeholder="e.g. CS2026-001"
             {...register('rollNumber')}
-            className={`w-full px-4 py-3 rounded-xl border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
+            className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
               errors.rollNumber ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
             }`}
           />
@@ -232,7 +232,7 @@ export const StudentForm = ({
             step="0.01"
             placeholder="e.g. 9.15"
             {...register('cgpa')}
-            className={`w-full px-4 py-3 rounded-xl border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
+            className={`w-full px-4 py-3 rounded-button border bg-surface-bg text-text-title placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-purple/40 focus:border-brand-purple transition-all ${
               errors.cgpa ? 'border-error/60 focus:ring-error/20' : 'border-surface-border'
             }`}
           />
@@ -256,7 +256,7 @@ export const StudentForm = ({
           whileTap={{ scale: 0.98 }}
           onClick={onCancel}
           disabled={isLoading}
-          className="flex-1 py-3 px-4 rounded-xl border border-surface-border text-text-title font-medium hover:bg-surface-bg transition-colors flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+          className="flex-1 py-3 px-4 rounded-button border border-surface-border text-text-title font-medium hover:bg-surface-bg transition-colors flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
         >
           <X size={16} />
           <span>Cancel</span>
@@ -267,7 +267,7 @@ export const StudentForm = ({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           disabled={isLoading || (!isDirty && initialData !== undefined)}
-          className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-brand-purple to-brand-indigo hover:from-brand-purple-hover text-surface-bg font-medium shadow-md shadow-brand-purple/20 flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+          className="flex-1 py-3 px-4 rounded-button bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-medium flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
         >
           {isLoading ? (
             <Loader2 size={16} className="animate-spin" />

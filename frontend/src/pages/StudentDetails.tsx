@@ -96,7 +96,7 @@ export const StudentDetails = () => {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md mx-auto text-center p-8 rounded-3xl border border-surface-border bg-surface-card shadow-premium space-y-4"
+          className="max-w-md mx-auto text-center p-8 rounded-card border border-surface-border bg-surface-card space-y-4"
       >
         <div className="w-16 h-16 rounded-full bg-error/10 text-error flex items-center justify-center mx-auto mb-2">
           <AlertCircle size={28} />
@@ -107,7 +107,7 @@ export const StudentDetails = () => {
         </p>
         <button
           onClick={() => navigate('/students')}
-          className="px-5 py-2.5 bg-gradient-to-r from-brand-purple to-brand-indigo text-surface-bg font-medium rounded-xl text-sm transition-transform hover:scale-[1.02] cursor-pointer inline-flex items-center space-x-2"
+          className="px-5 py-2.5 bg-brand-purple hover:bg-brand-purple-hover text-[#101010] font-medium rounded-button text-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
         >
           <ArrowLeft size={16} />
           <span>Back to Directory</span>
@@ -148,16 +148,16 @@ export const StudentDetails = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="lg:col-span-2 rounded-3xl border border-surface-border bg-surface-card shadow-premium overflow-hidden flex flex-col justify-between"
+          className="lg:col-span-2 rounded-card border border-surface-border bg-surface-card overflow-hidden flex flex-col justify-between"
         >
           {/* Cover Header Accent */}
-          <div className="h-44 gradient-bg relative" />
+          <div className="h-44 detail-banner relative" />
 
           {/* Profile Details Grid */}
           <div className="px-8 pb-8 relative flex-1 flex flex-col">
             {/* Initials Avatar */}
             <div className="absolute -top-14 left-8">
-              <div className="w-28 h-28 rounded-full border-4 border-surface-card gradient-bg flex items-center justify-center text-surface-bg text-4xl font-extrabold shadow-md">
+              <div className="w-28 h-28 rounded-full border-4 border-surface-card bg-brand-purple text-[#101010] flex items-center justify-center text-4xl font-extrabold">
                 {student.name.charAt(0)}
               </div>
             </div>
@@ -177,7 +177,7 @@ export const StudentDetails = () => {
               {/* Data Blocks Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-2">
                 <div className="flex items-center space-x-3 text-sm">
-                  <div className="p-2.5 rounded-xl bg-surface-bg border border-surface-border text-text-muted">
+                  <div className="p-2.5 rounded-button bg-surface-bg border border-surface-border text-text-muted">
                     <Hash size={18} />
                   </div>
                   <div>
@@ -187,7 +187,7 @@ export const StudentDetails = () => {
                 </div>
 
                 <div className="flex items-center space-x-3 text-sm">
-                  <div className="p-2.5 rounded-xl bg-surface-bg border border-surface-border text-text-muted">
+                  <div className="p-2.5 rounded-button bg-surface-bg border border-surface-border text-text-muted">
                     <Mail size={18} />
                   </div>
                   <div>
@@ -197,7 +197,7 @@ export const StudentDetails = () => {
                 </div>
 
                 <div className="flex items-center space-x-3 text-sm">
-                  <div className="p-2.5 rounded-xl bg-surface-bg border border-surface-border text-text-muted">
+                  <div className="p-2.5 rounded-button bg-surface-bg border border-surface-border text-text-muted">
                     <BookOpen size={18} />
                   </div>
                   <div>
@@ -207,7 +207,7 @@ export const StudentDetails = () => {
                 </div>
 
                 <div className="flex items-center space-x-3 text-sm">
-                  <div className="p-2.5 rounded-xl bg-surface-bg border border-surface-border text-text-muted">
+                  <div className="p-2.5 rounded-button bg-surface-bg border border-surface-border text-text-muted">
                     <Calendar size={18} />
                   </div>
                   <div>
@@ -221,14 +221,14 @@ export const StudentDetails = () => {
               <div className="flex justify-end space-x-3 pt-6 border-t border-surface-border mt-8">
                 <button
                   onClick={() => setIsFormOpen(true)}
-                  className="px-4 py-2.5 border border-surface-border hover:bg-surface-bg text-text-title font-medium rounded-xl text-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
+                  className="px-4 py-2.5 border border-surface-border hover:bg-surface-bg text-text-title font-medium rounded-button text-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
                 >
                   <Edit2 size={15} />
                   <span>Edit Profile</span>
                 </button>
                 <button
                   onClick={() => setDeletingStudent(student)}
-                  className="px-4 py-2.5 border border-error/20 hover:bg-error/5 text-error font-medium rounded-xl text-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
+                  className="px-4 py-2.5 border border-error/20 hover:bg-error/5 text-error font-medium rounded-button text-sm transition-colors cursor-pointer inline-flex items-center space-x-2"
                 >
                   <Trash2 size={15} />
                   <span>Delete Profile</span>
@@ -243,7 +243,7 @@ export const StudentDetails = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="rounded-3xl border border-surface-border bg-surface-card p-6 shadow-premium flex flex-col justify-between"
+          className="rounded-card border border-surface-border bg-surface-card p-6 flex flex-col justify-between"
         >
           <div>
             <h4 className="font-bold text-lg mb-1">Academic Rating</h4>
@@ -313,7 +313,7 @@ export const StudentDetails = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-surface-bg text-center space-y-1">
+          <div className="p-4 rounded-card bg-surface-bg text-center space-y-1">
             <p className="text-xs text-text-muted font-medium">Evaluation Reference</p>
             <p className="text-xs font-bold text-text-title">UGC Standard 10-Point System</p>
           </div>
@@ -336,7 +336,7 @@ export const StudentDetails = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="relative w-full max-w-lg bg-surface-card border border-surface-border p-6 shadow-premium rounded-3xl z-10 flex flex-col max-h-[90vh] overflow-hidden"
+              className="relative w-full max-w-lg bg-surface-card border border-surface-border p-6 rounded-card z-10 flex flex-col max-h-[90vh] overflow-hidden"
             >
               <div className="flex justify-between items-center pb-4 border-b border-surface-border">
                 <div>

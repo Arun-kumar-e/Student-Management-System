@@ -28,6 +28,7 @@ Thumbs.db
 
 ### Agent / tooling config ###
 .agents/
+DESIGN.md
 
 ### IDE ###
 .idea/

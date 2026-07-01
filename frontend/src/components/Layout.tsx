@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, 
   Users, 
-  Sun, 
-  Moon, 
   Menu, 
   X, 
   GraduationCap, 
@@ -18,28 +16,15 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children }: LayoutProps) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) return savedTheme === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Handle dark mode side effects
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
+    document.documentElement.classList.add('dark');
+  }, []);
 
-  // Close mobile drawer on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
@@ -49,7 +34,6 @@ export const Layout = ({ children }: LayoutProps) => {
     { name: 'Students', path: '/students', icon: Users },
   ];
 
-  // Helper to generate dynamic breadcrumbs
   const getBreadcrumbs = () => {
     const pathnames = location.pathname.split('/').filter((x) => x);
     return (
@@ -62,8 +46,6 @@ export const Layout = ({ children }: LayoutProps) => {
           pathnames.map((name, index) => {
             const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
             const isLast = index === pathnames.length - 1;
-            
-            // Format ID paths
             const formattedName = isNaN(Number(name)) 
               ? name.charAt(0).toUpperCase() + name.slice(1)
               : `Detail #${name}`;
@@ -94,12 +76,11 @@ export const Layout = ({ children }: LayoutProps) => {
   });
 
   return (
-    <div className="flex min-h-screen bg-surface-bg transition-colors duration-300">
-      {/* Sidebar - Desktop Layout */}
+    <div className="flex min-h-screen bg-surface-bg">
+      {/* Sidebar — Desktop */}
       <aside className="hidden md:flex flex-col w-64 border-r border-surface-border bg-surface-card z-20">
-        {/* Branding Logomark */}
         <div className="flex items-center space-x-3 px-6 py-6 border-b border-surface-border cursor-pointer" onClick={() => navigate('/')}>
-          <div className="gradient-bg p-2.5 rounded-xl text-surface-bg shadow-md shadow-brand-purple/20">
+          <div className="p-2 rounded-card bg-brand-purple text-[#101010]">
             <GraduationCap size={24} />
           </div>
           <div>
@@ -108,16 +89,15 @@ export const Layout = ({ children }: LayoutProps) => {
           </div>
         </div>
 
-        {/* Sidebar Nav Items */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
+        <nav className="flex-1 px-4 py-6 space-y-1">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all group ${
+                `flex items-center space-x-3 px-4 py-2.5 rounded-button font-medium transition-all group ${
                   isActive
-                    ? 'bg-gradient-to-r from-brand-purple/10 to-brand-pink/5 text-brand-purple shadow-sm'
+                    ? 'bg-brand-purple/10 text-brand-purple'
                     : 'text-text-body hover:bg-surface-bg hover:text-text-title'
                 }`
               }
@@ -133,6 +113,9 @@ export const Layout = ({ children }: LayoutProps) => {
                       }`} 
                     />
                     <span>{item.name}</span>
+                    {isActive && (
+                      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-purple" />
+                    )}
                   </>
                 );
               }}
@@ -140,20 +123,18 @@ export const Layout = ({ children }: LayoutProps) => {
           ))}
         </nav>
 
-        {/* Bottom Banner */}
         <div className="p-4 border-t border-surface-border">
-          <div className="rounded-2xl p-4 bg-surface-bg text-center space-y-1">
+          <div className="rounded-card p-4 bg-surface-bg text-center space-y-1 border border-surface-border">
             <p className="text-xs text-text-muted font-medium">Running Local Port</p>
             <p className="text-xs font-bold text-text-title">REST: 8080 | WEB: 3000</p>
           </div>
         </div>
       </aside>
 
-      {/* Main Drawer - Mobile Overlay */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <div className="md:hidden fixed inset-0 z-50 flex">
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -161,13 +142,12 @@ export const Layout = ({ children }: LayoutProps) => {
               onClick={() => setIsMobileMenuOpen(false)}
               className="fixed inset-0 bg-black/55 backdrop-blur-xs"
             />
-            {/* Drawer Drawer Body */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-              className="relative flex flex-col w-64 bg-surface-card border-r border-surface-border p-6 shadow-2xl z-10"
+              className="relative flex flex-col w-64 bg-surface-card border-r border-surface-border p-6 z-10"
             >
               <div className="flex items-center justify-between pb-6 border-b border-surface-border mb-6">
                 <div className="flex items-center space-x-2">
@@ -176,21 +156,21 @@ export const Layout = ({ children }: LayoutProps) => {
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1 rounded-full text-text-muted hover:bg-surface-bg hover:text-text-title"
+                  className="p-1 rounded-button text-text-muted hover:bg-surface-bg hover:text-text-title"
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              <nav className="flex-1 space-y-2">
+              <nav className="flex-1 space-y-1">
                 {navItems.map((item) => (
                   <NavLink
                     key={item.name}
                     to={item.path}
                     className={({ isActive }) =>
-                      `flex items-center space-x-3 px-4 py-3.5 rounded-xl font-medium transition-all ${
+                      `flex items-center space-x-3 px-4 py-2.5 rounded-button font-medium transition-all ${
                         isActive
-                          ? 'bg-brand-purple/10 text-brand-purple font-semibold shadow-sm'
+                          ? 'bg-brand-purple/10 text-brand-purple font-semibold'
                           : 'text-text-body hover:bg-surface-bg'
                       }`
                     }
@@ -207,29 +187,18 @@ export const Layout = ({ children }: LayoutProps) => {
                   </NavLink>
                 ))}
               </nav>
-
-              <div className="pt-6 border-t border-surface-border">
-                <button
-                  onClick={() => setDarkMode(!darkMode)}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-surface-border text-text-title hover:bg-surface-bg transition-colors"
-                >
-                  <span className="font-medium text-sm">Theme</span>
-                  {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-                </button>
-              </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* Main Content Workspace Layout */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Navbar Header */}
-        <header className="sticky top-0 z-10 glass-panel border-b border-surface-border h-16 flex items-center justify-between px-4 md:px-8">
+        <header className="sticky top-0 z-10 bg-surface-card/90 backdrop-blur-sm border-b border-surface-border h-16 flex items-center justify-between px-4 md:px-8">
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-xl text-text-body hover:bg-surface-bg hover:text-text-title transition-colors"
+              className="md:hidden p-2 rounded-button text-text-body hover:bg-surface-bg hover:text-text-title transition-colors"
             >
               <Menu size={20} />
             </button>
@@ -237,26 +206,13 @@ export const Layout = ({ children }: LayoutProps) => {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Clock & Date Widget */}
             <div className="hidden lg:flex items-center space-x-2 text-xs font-semibold text-text-muted bg-surface-bg border border-surface-border px-3.5 py-1.5 rounded-full">
               <Clock size={12} className="text-brand-purple" />
               <span>{formattedDate}</span>
             </div>
-
-            {/* Theme Toggle - Desktop View */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-card text-text-body hover:bg-surface-bg hover:text-text-title shadow-sm transition-colors cursor-pointer"
-              aria-label="Toggle theme mode"
-            >
-              {darkMode ? <Sun size={18} className="text-amber-500 animate-spin-slow" /> : <Moon size={18} className="text-brand-indigo" />}
-            </motion.button>
           </div>
         </header>
 
-        {/* Dynamic Route View Wrapper */}
         <main className="flex-1 overflow-y-auto px-4 md:px-8 py-8 max-w-7xl w-full mx-auto">
           {children}
         </main>

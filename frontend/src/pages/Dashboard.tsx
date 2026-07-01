@@ -16,6 +16,8 @@ import { StatCard } from '../components/StatCard';
 import { DashboardSkeleton } from '../components/SkeletonLoader';
 import toast from 'react-hot-toast';
 
+const CHART_GREEN = '#00d992';
+
 export const Dashboard = () => {
   const [students, setStudents] = useState<StudentResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +27,6 @@ export const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true);
-        // Fetch a large page limit to calculate real aggregated metrics for dashboard stats
         const data = await studentService.getAll(0, 1000, 'enrolledAt', 'desc');
         setStudents(data.content);
       } catch (error) {
@@ -42,13 +43,11 @@ export const Dashboard = () => {
     return <DashboardSkeleton />;
   }
 
-  // Aggregate Metrics
   const totalStudents = students.length;
   const avgCgpa = totalStudents > 0 
     ? students.reduce((sum, s) => sum + s.cgpa, 0) / totalStudents 
     : 0.0;
 
-  // Department counts
   const departmentCounts: { [key: string]: number } = {};
   students.forEach((s) => {
     departmentCounts[s.department] = (departmentCounts[s.department] || 0) + 1;
@@ -57,12 +56,10 @@ export const Dashboard = () => {
   const uniqueDepartments = Object.keys(departmentCounts).length;
 
   const chartData = Object.keys(departmentCounts).map((dept) => ({
-    name: dept.split(' ').map(w => w.charAt(0)).join(''), // Abbreviate department name for chart axis
+    name: dept.split(' ').map(w => w.charAt(0)).join(''),
     fullName: dept,
     count: departmentCounts[dept],
   })).sort((a, b) => b.count - a.count);
-
-  const colors = ['#818cf8', '#a78bfa', '#f472b6', '#34d399', '#fb7185', '#fbbf24'];
 
   const recentStudents = students.slice(0, 5);
 
@@ -74,21 +71,21 @@ export const Dashboard = () => {
       className="space-y-8"
     >
       {/* Welcome Banner */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-6 md:p-8 rounded-3xl border border-surface-border bg-surface-card shadow-premium relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/5 to-brand-pink/5 opacity-100 transition-opacity duration-300" />
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-6 md:p-8 rounded-card border border-surface-border bg-surface-card relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/[0.04] to-brand-indigo/[0.02]" />
         <div className="space-y-2 z-10">
           <h2 className="text-3xl font-extrabold tracking-tight">
-            Academic <span className="gradient-text">Overview</span> Dashboard
+            Academic <span className="text-brand-purple">Overview</span> Dashboard
           </h2>
           <p className="text-text-body text-sm font-medium">
             Welcome back to SMS Console. Manage enrollments, inspect metrics, and analyze student performances.
           </p>
         </div>
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => navigate('/students', { state: { openCreateForm: true } })}
-          className="mt-4 md:mt-0 px-5 py-3 rounded-xl bg-gradient-to-r from-brand-purple to-brand-pink text-surface-bg font-semibold flex items-center space-x-2 shadow-md shadow-brand-purple/20 cursor-pointer z-10 hover:shadow-lg transition-shadow"
+          className="mt-4 md:mt-0 px-5 py-2.5 rounded-button bg-brand-purple text-[#101010] font-semibold flex items-center space-x-2 cursor-pointer z-10 hover:bg-brand-purple-hover transition-colors"
         >
           <Plus size={18} />
           <span>New Enrollment</span>
@@ -102,7 +99,6 @@ export const Dashboard = () => {
           value={totalStudents}
           icon={Users}
           description="Enrolled in active terms"
-          gradient="from-brand-indigo to-brand-purple"
           delay={0.1}
         />
         <StatCard
@@ -111,7 +107,6 @@ export const Dashboard = () => {
           decimals={2}
           icon={GraduationCap}
           description="Consolidated student rating"
-          gradient="from-brand-purple to-brand-pink"
           delay={0.2}
         />
         <StatCard
@@ -119,26 +114,25 @@ export const Dashboard = () => {
           value={uniqueDepartments}
           icon={BookOpen}
           description="Active branches of study"
-          gradient="from-brand-pink to-brand-purple"
           delay={0.3}
         />
       </div>
 
-      {/* Analytics Breakdown & Recent Enrollments */}
+      {/* Analytics & Recent Enrollments */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Department chart (Recharts) */}
+        {/* Department chart */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="lg:col-span-2 p-6 rounded-3xl border border-surface-border bg-surface-card shadow-premium flex flex-col justify-between"
+          className="lg:col-span-2 p-6 rounded-card border border-surface-border bg-surface-card flex flex-col justify-between"
         >
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold flex items-center space-x-2">
               <TrendingUp size={18} className="text-brand-purple" />
               <span>Department breakdown</span>
             </h3>
-            <span className="text-xs text-text-muted font-medium bg-surface-bg px-3 py-1 rounded-full">
+            <span className="text-xs text-text-muted font-medium bg-surface-bg px-3 py-1 rounded-full border border-surface-border">
               Distribution Count
             </span>
           </div>
@@ -147,15 +141,15 @@ export const Dashboard = () => {
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} allowDecimals={false} />
+                  <XAxis dataKey="name" stroke="#8b949e" fontSize={12} tickLine={false} />
+                  <YAxis stroke="#8b949e" fontSize={12} tickLine={false} allowDecimals={false} />
                   <Tooltip
-                    cursor={{ fill: 'rgba(167, 139, 250, 0.05)' }}
+                    cursor={{ fill: 'rgba(0, 217, 146, 0.05)' }}
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         const data = payload[0].payload;
                         return (
-                          <div className="p-3 bg-surface-card border border-surface-border rounded-xl shadow-lg text-xs font-semibold text-text-title">
+                          <div className="p-3 bg-surface-card border border-surface-border rounded-card text-xs font-semibold text-text-title">
                             <p className="font-bold text-brand-purple">{data.fullName}</p>
                             <p className="mt-1">Students: {data.count}</p>
                           </div>
@@ -164,9 +158,9 @@ export const Dashboard = () => {
                       return null;
                     }}
                   />
-                  <Bar dataKey="count" radius={[8, 8, 0, 0]} maxBarSize={45}>
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={45}>
                     {chartData.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                      <Cell key={`cell-${index}`} fill={CHART_GREEN} fillOpacity={0.8 - index * 0.08} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -184,7 +178,7 @@ export const Dashboard = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="p-6 rounded-3xl border border-surface-border bg-surface-card shadow-premium flex flex-col justify-between"
+          className="p-6 rounded-card border border-surface-border bg-surface-card flex flex-col justify-between"
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold">Recent Enrollments</h3>
@@ -197,7 +191,7 @@ export const Dashboard = () => {
             </button>
           </div>
 
-          <div className="flex-1 space-y-4 py-2">
+          <div className="flex-1 space-y-3 py-2">
             {recentStudents.length > 0 ? (
               recentStudents.map((s, idx) => (
                 <motion.div
@@ -205,7 +199,7 @@ export const Dashboard = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * idx }}
-                  className="flex items-center justify-between p-3 rounded-xl border border-surface-border bg-surface-bg/40 hover:bg-surface-bg transition-colors cursor-pointer"
+                  className="flex items-center justify-between p-3 rounded-button border border-surface-border bg-surface-bg/40 hover:bg-surface-bg transition-colors cursor-pointer"
                   onClick={() => navigate(`/students/${s.id}`)}
                 >
                   <div className="flex items-center space-x-3 min-w-0">
@@ -218,8 +212,8 @@ export const Dashboard = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-bold px-2 py-0.5 bg-brand-pink/10 text-brand-pink rounded-full">
-                      ★ {s.cgpa.toFixed(2)}
+                    <span className="text-xs font-bold px-2 py-0.5 bg-brand-purple/10 text-brand-purple rounded-full">
+                      {s.cgpa.toFixed(2)}
                     </span>
                   </div>
                 </motion.div>
