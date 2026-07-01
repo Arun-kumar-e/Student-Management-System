@@ -26,6 +26,9 @@ Thumbs.db
 *.swo
 *~
 
+### Agent / tooling config ###
+.agents/
+
 ### IDE ###
 .idea/
 *.iml
